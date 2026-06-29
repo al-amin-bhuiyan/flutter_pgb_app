@@ -16,6 +16,16 @@ import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/domain/usecases/verify_session_usecase.dart';
 
+import '../../features/locations/data/datasources/locations_local_data_source.dart';
+import '../../features/locations/data/datasources/locations_local_data_source_impl.dart';
+import '../../features/locations/data/datasources/locations_remote_data_source.dart';
+import '../../features/locations/data/datasources/locations_remote_data_source_impl.dart';
+import '../../features/locations/data/repositories/locations_repository_impl.dart';
+import '../../features/locations/domain/repositories/locations_repository.dart';
+import '../../features/locations/domain/usecases/get_locations_usecase.dart';
+import '../../features/locations/domain/usecases/save_location_usecase.dart';
+import '../../features/locations/domain/usecases/delete_location_usecase.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initDI() async {
@@ -49,7 +59,7 @@ Future<void> initDI() async {
     return client;
   });
 
-  // Data Sources
+  // Data Sources - Authentication
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(client: sl<DioClient>()),
   );
@@ -60,7 +70,7 @@ Future<void> initDI() async {
     ),
   );
 
-  // Repositories
+  // Repositories - Authentication
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
@@ -68,8 +78,29 @@ Future<void> initDI() async {
     ),
   );
 
-  // Use cases
+  // Use cases - Authentication
   sl.registerLazySingleton(() => LoginUseCase(repository: sl<AuthRepository>()));
   sl.registerLazySingleton(() => RegisterUseCase(repository: sl<AuthRepository>()));
   sl.registerLazySingleton(() => VerifySessionUseCase(repository: sl<AuthRepository>()));
+
+  // Data Sources - Locations
+  sl.registerLazySingleton<LocationsRemoteDataSource>(
+    () => LocationsRemoteDataSourceImpl(client: sl<DioClient>()),
+  );
+  sl.registerLazySingleton<LocationsLocalDataSource>(
+    () => LocationsLocalDataSourceImpl(hiveService: sl<HiveService>()),
+  );
+
+  // Repositories - Locations
+  sl.registerLazySingleton<LocationsRepository>(
+    () => LocationsRepositoryImpl(
+      remoteDataSource: sl<LocationsRemoteDataSource>(),
+      localDataSource: sl<LocationsLocalDataSource>(),
+    ),
+  );
+
+  // Use cases - Locations
+  sl.registerLazySingleton(() => GetLocationsUseCase(repository: sl<LocationsRepository>()));
+  sl.registerLazySingleton(() => SaveLocationUseCase(repository: sl<LocationsRepository>()));
+  sl.registerLazySingleton(() => DeleteLocationUseCase(repository: sl<LocationsRepository>()));
 }

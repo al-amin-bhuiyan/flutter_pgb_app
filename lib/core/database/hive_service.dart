@@ -1,4 +1,5 @@
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import '../../hive_registrar.g.dart';
 
 abstract class HiveService {
   Future<void> init();
@@ -10,6 +11,7 @@ class HiveServiceImpl implements HiveService {
   @override
   Future<void> init() async {
     await Hive.initFlutter();
+    Hive.registerAdapters();
     await Hive.openBox('user_box');
     await Hive.openBox('locations_box');
     await Hive.openBox('todos_box');

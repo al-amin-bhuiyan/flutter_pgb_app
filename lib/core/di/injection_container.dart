@@ -26,6 +26,17 @@ import '../../features/locations/domain/usecases/get_locations_usecase.dart';
 import '../../features/locations/domain/usecases/save_location_usecase.dart';
 import '../../features/locations/domain/usecases/delete_location_usecase.dart';
 
+import '../../features/todos/data/datasources/todos_local_data_source.dart';
+import '../../features/todos/data/datasources/todos_local_data_source_impl.dart';
+import '../../features/todos/data/datasources/todos_remote_data_source.dart';
+import '../../features/todos/data/datasources/todos_remote_data_source_impl.dart';
+import '../../features/todos/data/repositories/todos_repository_impl.dart';
+import '../../features/todos/domain/repositories/todos_repository.dart';
+import '../../features/todos/domain/usecases/get_todos_usecase.dart';
+import '../../features/todos/domain/usecases/save_todo_usecase.dart';
+import '../../features/sync/domain/usecases/sync_todos_usecase.dart';
+
+
 final sl = GetIt.instance;
 
 Future<void> initDI() async {
@@ -103,4 +114,25 @@ Future<void> initDI() async {
   sl.registerLazySingleton(() => GetLocationsUseCase(repository: sl<LocationsRepository>()));
   sl.registerLazySingleton(() => SaveLocationUseCase(repository: sl<LocationsRepository>()));
   sl.registerLazySingleton(() => DeleteLocationUseCase(repository: sl<LocationsRepository>()));
+
+  // Data Sources - Todos
+  sl.registerLazySingleton<TodosRemoteDataSource>(
+    () => TodosRemoteDataSourceImpl(client: sl<DioClient>()),
+  );
+  sl.registerLazySingleton<TodosLocalDataSource>(
+    () => TodosLocalDataSourceImpl(hiveService: sl<HiveService>()),
+  );
+
+  // Repositories - Todos
+  sl.registerLazySingleton<TodosRepository>(
+    () => TodosRepositoryImpl(
+      remoteDataSource: sl<TodosRemoteDataSource>(),
+      localDataSource: sl<TodosLocalDataSource>(),
+    ),
+  );
+
+  // Use cases - Todos
+  sl.registerLazySingleton(() => GetTodosUseCase(repository: sl<TodosRepository>()));
+  sl.registerLazySingleton(() => SaveTodoUseCase(repository: sl<TodosRepository>()));
+  sl.registerLazySingleton(() => SyncTodosUseCase(repository: sl<TodosRepository>()));
 }

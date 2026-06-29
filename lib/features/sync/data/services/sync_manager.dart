@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import '../../../../core/network/network_info.dart';
 import '../../../todos/data/datasources/todos_local_data_source.dart';
 import '../../../todos/data/models/todo_model.dart';
@@ -8,6 +9,7 @@ class SyncManager {
   final NetworkInfo _networkInfo;
   final TodosLocalDataSource _localDataSource;
   final TodosRepository _todosRepository;
+  StreamSubscription<bool>? _connectivitySubscription;
 
   SyncManager({
     required NetworkInfo networkInfo,
@@ -16,6 +18,18 @@ class SyncManager {
   })  : _networkInfo = networkInfo,
         _localDataSource = localDataSource,
         _todosRepository = todosRepository;
+
+  void initialize() {
+    _connectivitySubscription = _networkInfo.onConnectivityChanged.listen((isConnected) {
+      if (isConnected) {
+        processSyncQueue();
+      }
+    });
+  }
+
+  void dispose() {
+    _connectivitySubscription?.cancel();
+  }
 
   Future<void> processSyncQueue() async {
     try {

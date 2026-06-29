@@ -35,6 +35,11 @@ import '../../features/todos/domain/repositories/todos_repository.dart';
 import '../../features/todos/domain/usecases/get_todos_usecase.dart';
 import '../../features/todos/domain/usecases/save_todo_usecase.dart';
 import '../../features/sync/domain/usecases/sync_todos_usecase.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import '../network/network_info.dart';
+import '../network/network_info_impl.dart';
+import '../../features/sync/data/services/sync_manager.dart';
+
 
 
 final sl = GetIt.instance;
@@ -43,6 +48,9 @@ Future<void> initDI() async {
   final hiveService = HiveServiceImpl();
   await hiveService.init();
   sl.registerSingleton<HiveService>(hiveService);
+
+  sl.registerLazySingleton<Connectivity>(() => Connectivity());
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(connectivity: sl<Connectivity>()));
 
   const storage = FlutterSecureStorage();
   sl.registerLazySingleton<SecureStorageHelper>(() => SecureStorageHelper(storage: storage));
@@ -135,4 +143,13 @@ Future<void> initDI() async {
   sl.registerLazySingleton(() => GetTodosUseCase(repository: sl<TodosRepository>()));
   sl.registerLazySingleton(() => SaveTodoUseCase(repository: sl<TodosRepository>()));
   sl.registerLazySingleton(() => SyncTodosUseCase(repository: sl<TodosRepository>()));
+
+  // Sync Manager Service
+  sl.registerSingleton<SyncManager>(
+    SyncManager(
+      networkInfo: sl<NetworkInfo>(),
+      localDataSource: sl<TodosLocalDataSource>(),
+      todosRepository: sl<TodosRepository>(),
+    )..initialize(),
+  );
 }

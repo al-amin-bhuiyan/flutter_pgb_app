@@ -13,7 +13,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Pgb App',
-      theme: PgbTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      theme: PgbTheme.lightTheme,
+      darkTheme: PgbTheme.darkTheme,
       routerConfig: AppRouter.router,
     );
   }

@@ -33,6 +33,24 @@ class TodoModel {
     );
   }
 
+  factory TodoModel.fromJson(Map<String, dynamic> json) {
+    return TodoModel(
+      id: (json['id'] ?? json['todo_id']) as String,
+      title: (json['title'] ?? '') as String,
+      isCompleted: (json['is_completed'] ?? json['isCompleted'] ?? false) as bool,
+      updatedAt: DateTime.parse((json['updated_at'] ?? json['updatedAt']) as String),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'is_completed': isCompleted,
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
+
   Todo toEntity() {
     return Todo(
       id: id,

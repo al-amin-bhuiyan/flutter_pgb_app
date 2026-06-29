@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/pgb_theme.dart';
 
-void main() {
+import 'core/di/injection_container.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDI();
   runApp(const MyApp());
 }
 

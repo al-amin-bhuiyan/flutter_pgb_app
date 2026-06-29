@@ -22,16 +22,24 @@ class SyncManager {
       final queue = await _localDataSource.getSyncQueue();
       if (queue.isEmpty) return;
 
-      final todos = <TodoModel>[];
+      final grouped = <String, List<TodoModel>>{};
       for (var item in queue) {
         if (item.action == 'save') {
           final todoJson = jsonDecode(item.payloadJson) as Map<String, dynamic>;
-          todos.add(TodoModel.fromJson(todoJson));
+          final model = TodoModel.fromJson(todoJson);
+          grouped.putIfAbsent(model.id, () => []).add(model);
         }
       }
 
-      if (todos.isNotEmpty) {
-        final entities = todos.map((m) => m.toEntity()).toList();
+      final latestChanges = <TodoModel>[];
+      for (var todoId in grouped.keys) {
+        final models = grouped[todoId]!;
+        models.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+        latestChanges.add(models.first);
+      }
+
+      if (latestChanges.isNotEmpty) {
+        final entities = latestChanges.map((m) => m.toEntity()).toList();
         await _todosRepository.syncTodos(entities);
         
         for (var item in queue) {

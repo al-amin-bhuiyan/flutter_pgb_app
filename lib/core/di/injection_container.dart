@@ -39,6 +39,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../network/network_info.dart';
 import '../network/network_info_impl.dart';
 import '../../features/sync/data/services/sync_manager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../../features/geofence/data/services/permission_manager.dart';
+import '../../features/geofence/data/services/notification_helper.dart';
+import '../../features/geofence/domain/helpers/proximity_calculator.dart';
+import '../../features/geofence/data/services/geofence_manager.dart';
+
 
 
 
@@ -151,5 +157,21 @@ Future<void> initDI() async {
       localDataSource: sl<TodosLocalDataSource>(),
       todosRepository: sl<TodosRepository>(),
     )..initialize(),
+  );
+
+  // Geofence & Notifications Services
+  sl.registerLazySingleton<FlutterLocalNotificationsPlugin>(() => FlutterLocalNotificationsPlugin());
+  sl.registerLazySingleton<NotificationHelper>(
+    () => NotificationHelper(notificationsPlugin: sl<FlutterLocalNotificationsPlugin>()),
+  );
+  sl.registerLazySingleton<ProximityCalculator>(() => ProximityCalculator());
+  sl.registerLazySingleton<PermissionManager>(() => PermissionManagerImpl());
+
+  sl.registerLazySingleton<GeofenceManager>(
+    () => GeofenceManager(
+      localDataSource: sl<LocationsLocalDataSource>(),
+      proximityCalculator: sl<ProximityCalculator>(),
+      notificationHelper: sl<NotificationHelper>(),
+    ),
   );
 }

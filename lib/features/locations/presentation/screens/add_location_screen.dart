@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/presentation/widgets/app_text_field.dart';
 import '../../../../core/presentation/widgets/app_button.dart';
+import '../../../../core/presentation/widgets/app_icon_button.dart';
 import '../../../../core/theme/dimensions.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../bloc/locations_bloc.dart';
 import '../bloc/locations_event.dart';
 import '../bloc/locations_state.dart';
@@ -49,21 +52,18 @@ class _AddLocationFormState extends State<AddLocationForm> {
     final isTablet = screenWidth > AppDimensions.tabletBreakpoint;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEDF1),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0.5,
         title: Text(
           'Add Location',
-          style: TextStyle(
-            color: const Color(0xFF1E2530),
-            fontWeight: FontWeight.w700,
-            fontSize: AppDimensions.fontTitleM,
-            fontFamily: 'Inter',
-          ),
+          style: AppTextStyles.titleMedium,
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: const Color(0xFF1E2530), size: AppDimensions.fontTitleM),
+        leading: AppIconButton(
+          icon: Icons.arrow_back_ios_new,
+          color: AppColors.textPrimary,
+          size: AppDimensions.fontTitleM,
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -75,7 +75,7 @@ class _AddLocationFormState extends State<AddLocationForm> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.redAccent,
+                backgroundColor: AppColors.error,
               ),
             );
           }
@@ -96,11 +96,11 @@ class _AddLocationFormState extends State<AddLocationForm> {
                     child: Container(
                       padding: EdgeInsets.all(AppDimensions.paddingXXL),
                       decoration: ShapeDecoration(
-                        color: const Color(0xFFF4F6F8),
+                        color: AppColors.cardBackground,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppDimensions.radiusContainer),
                           side: const BorderSide(
-                            color: Color(0xFFE6EAEF),
+                            color: AppColors.border,
                             width: 1,
                           ),
                         ),
@@ -118,12 +118,7 @@ class _AddLocationFormState extends State<AddLocationForm> {
                         children: [
                           Text(
                             'Set up geofence boundary coordinates',
-                            style: TextStyle(
-                              color: const Color(0xFF5C6675),
-                              fontSize: AppDimensions.fontL,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Inter',
-                            ),
+                            style: AppTextStyles.bodySmall,
                           ),
                           SizedBox(height: AppDimensions.space3XL),
                           
@@ -135,7 +130,7 @@ class _AddLocationFormState extends State<AddLocationForm> {
                             prefixIcon: Icons.title,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter location name';
+                                return 'Please enter location name';
                               }
                               return null;
                             },
@@ -151,14 +146,14 @@ class _AddLocationFormState extends State<AddLocationForm> {
                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter latitude';
+                                return 'Please enter latitude';
                               }
                               final lat = double.tryParse(value);
                               if (lat == null) {
-                                    return 'Please enter a valid number';
+                                return 'Please enter a valid number';
                               }
                               if (lat < -90 || lat > 90) {
-                                    return 'Latitude must be between -90 and 90';
+                                return 'Latitude must be between -90 and 90';
                               }
                               return null;
                             },
@@ -174,14 +169,14 @@ class _AddLocationFormState extends State<AddLocationForm> {
                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter longitude';
+                                return 'Please enter longitude';
                               }
                               final lng = double.tryParse(value);
                               if (lng == null) {
-                                    return 'Please enter a valid number';
+                                return 'Please enter a valid number';
                               }
                               if (lng < -180 || lng > 180) {
-                                    return 'Longitude must be between -180 and 180';
+                                return 'Longitude must be between -180 and 180';
                               }
                               return null;
                             },
@@ -197,11 +192,11 @@ class _AddLocationFormState extends State<AddLocationForm> {
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter radius';
+                                return 'Please enter radius';
                               }
                               final radius = double.tryParse(value);
                               if (radius == null || radius <= 0) {
-                                    return 'Please enter a positive radius';
+                                return 'Please enter a positive radius';
                               }
                               return null;
                             },

@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/dimensions.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/presentation/widgets/app_icon_button.dart';
 import '../../domain/entities/geofence_location.dart';
 import '../bloc/locations_bloc.dart';
 import '../bloc/locations_event.dart';
@@ -35,21 +38,18 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
     final isTablet = screenWidth > AppDimensions.tabletBreakpoint;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEDF1),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0.5,
         title: Text(
           'Locations',
-          style: TextStyle(
-            color: const Color(0xFF1E2530),
-            fontWeight: FontWeight.w700,
-            fontSize: AppDimensions.fontTitleM,
-            fontFamily: 'Inter',
-          ),
+          style: AppTextStyles.titleMedium,
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: const Color(0xFF1E2530), size: AppDimensions.fontTitleM),
+        leading: AppIconButton(
+          icon: Icons.arrow_back_ios_new,
+          color: AppColors.textPrimary,
+          size: AppDimensions.fontTitleM,
           onPressed: () => context.go(AppRouter.dashboardPath),
         ),
       ),
@@ -59,7 +59,7 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: const Color(0xFF0D9488),
+                backgroundColor: AppColors.primary,
               ),
             );
             context.read<LocationsBloc>().add(LoadLocationsEvent());
@@ -67,7 +67,7 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.redAccent,
+                backgroundColor: AppColors.error,
               ),
             );
           }
@@ -77,7 +77,7 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
             if (state is LocationsLoading || state is LocationsInitial) {
               return const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0D9488)),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                 ),
               );
             }
@@ -96,33 +96,25 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                           width: AppDimensions.sizeLogo + 20,
                           height: AppDimensions.sizeLogo + 20,
                           decoration: const BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.white,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.location_off_outlined,
                             size: AppDimensions.iconXXL,
-                            color: const Color(0xFF0D9488),
+                            color: AppColors.primary,
                           ),
                         ),
                         SizedBox(height: AppDimensions.space3XL),
                         Text(
                           'No locations monitored yet',
-                          style: TextStyle(
-                            fontSize: AppDimensions.fontTitleS,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1E2530),
-                            fontFamily: 'Inter',
-                          ),
+                          style: AppTextStyles.titleSmall,
                         ),
                         SizedBox(height: AppDimensions.spaceM),
                         Text(
                           'Add coordinates and radius to set up geofencing boundaries and alerts.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: AppDimensions.fontL,
-                            color: const Color(0xFF6B7480),
-                            fontFamily: 'Inter',
+                          style: AppTextStyles.bodySmall.copyWith(
                             height: 1.5,
                           ),
                         ),
@@ -133,13 +125,13 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                               context.read<LocationsBloc>().add(LoadLocationsEvent());
                             }
                           }),
-                          icon: const Icon(Icons.add, color: Colors.white),
+                          icon: const Icon(Icons.add, color: AppColors.white),
                           label: const Text(
                             'Add Location',
-                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                            style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.white),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0D9488),
+                            backgroundColor: AppColors.primary,
                             padding: EdgeInsets.symmetric(
                               horizontal: AppDimensions.paddingXXL,
                               vertical: AppDimensions.paddingL - 2,
@@ -193,11 +185,11 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                   context.read<LocationsBloc>().add(LoadLocationsEvent());
                 }
               }),
-              backgroundColor: const Color(0xFF0D9488),
+              backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
               ),
-              child: const Icon(Icons.add, color: Colors.white),
+              child: const Icon(Icons.add, color: AppColors.white),
             );
           }
           return const SizedBox.shrink();
@@ -210,11 +202,11 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
     return Container(
       margin: EdgeInsets.only(bottom: AppDimensions.paddingM + 2),
       decoration: ShapeDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusCard),
           side: const BorderSide(
-            color: Color(0xFFE6EAEF),
+            color: AppColors.border,
             width: 1,
           ),
         ),
@@ -236,14 +228,14 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
               width: AppDimensions.widthIconBg,
               height: AppDimensions.heightIconBg,
               decoration: ShapeDecoration(
-                color: const Color(0xFFF4F6F8),
+                color: AppColors.cardBackground,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                 ),
               ),
               child: Icon(
                 Icons.location_on,
-                color: const Color(0xFF0D9488),
+                color: AppColors.primary,
                 size: AppDimensions.iconL,
               ),
             ),
@@ -255,21 +247,12 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                 children: [
                   Text(
                     location.name,
-                    style: TextStyle(
-                      fontSize: AppDimensions.fontXXL,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF131A24),
-                      fontFamily: 'Inter',
-                    ),
+                    style: AppTextStyles.bodyLarge,
                   ),
                   SizedBox(height: AppDimensions.spaceS),
                   Text(
                     'Coordinates: ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}',
-                    style: TextStyle(
-                      fontSize: AppDimensions.fontM,
-                      color: const Color(0xFF6B7480),
-                      fontFamily: 'Inter',
-                    ),
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textLight),
                   ),
                   SizedBox(height: AppDimensions.spaceS),
                   Container(
@@ -278,19 +261,14 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                       vertical: AppDimensions.paddingXS,
                     ),
                     decoration: ShapeDecoration(
-                      color: const Color(0xFFD6F3EF),
+                      color: AppColors.tealLight,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                       ),
                     ),
                     child: Text(
                       'Radius: ${location.radius.toInt()}m',
-                      style: TextStyle(
-                        fontSize: AppDimensions.fontXS,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF0D9488),
-                        fontFamily: 'Inter',
-                      ),
+                      style: AppTextStyles.badge,
                     ),
                   ),
                 ],
@@ -299,8 +277,10 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: Icon(Icons.edit_outlined, color: const Color(0xFF5C6675), size: AppDimensions.iconL),
+                AppIconButton(
+                  icon: Icons.edit_outlined,
+                  color: AppColors.textSecondary,
+                  size: AppDimensions.iconL,
                   onPressed: () {
                     context.push(AppRouter.editLocationPath, extra: location).then((_) {
                       if (context.mounted) {
@@ -309,8 +289,10 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                     });
                   },
                 ),
-                IconButton(
-                  icon: Icon(Icons.delete_outline, color: Colors.redAccent, size: AppDimensions.iconL),
+                AppIconButton(
+                  icon: Icons.delete_outline,
+                  color: AppColors.error,
+                  size: AppDimensions.iconL,
                   onPressed: () => _showDeleteConfirmation(context, location),
                 ),
               ],
@@ -327,21 +309,21 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
       builder: (dialogContext) => AlertDialog(
         title: Text(
           'Delete Location?',
-          style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'Inter', fontSize: AppDimensions.fontTitleS),
+          style: AppTextStyles.titleSmall,
         ),
         content: Text('Are you sure you want to delete "${location.name}"? This will stop geofencing alerts for this area.'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusCard)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel', style: TextStyle(color: Color(0xFF6B7480))),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textLight)),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(dialogContext);
               context.read<LocationsBloc>().add(DeleteLocationEvent(id: location.id));
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            child: const Text('Delete', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

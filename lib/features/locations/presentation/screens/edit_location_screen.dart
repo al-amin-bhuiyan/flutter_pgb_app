@@ -7,6 +7,7 @@ import '../../../../core/presentation/widgets/app_icon_button.dart';
 import '../../../../core/theme/dimensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/presentation/utils/app_snackbar.dart';
 import '../../domain/entities/geofence_location.dart';
 import '../bloc/locations_bloc.dart';
 import '../bloc/locations_event.dart';
@@ -92,12 +93,7 @@ class _EditLocationFormState extends State<EditLocationForm> {
           if (state is LocationsActionSuccess) {
             Navigator.of(context).pop(true);
           } else if (state is LocationsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackbar.showError(context, state.message);
           }
         },
         child: BlocBuilder<LocationsBloc, LocationsState>(

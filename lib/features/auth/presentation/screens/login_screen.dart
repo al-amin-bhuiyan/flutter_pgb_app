@@ -7,6 +7,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/dimensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/presentation/utils/app_snackbar.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -73,15 +74,15 @@ class _LoginFormState extends State<LoginForm> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Figma Exact Colors matching light & dark specs
-    final outerColor = isDark ? const Color(0xFF0E1521) : const Color(0xFFF4F6F8);
-    final borderColor = isDark ? const Color(0xFF222C3A) : const Color(0xFFE6EAEF);
-    final inputBgColor = isDark ? const Color(0xFF18212F) : Colors.white;
-    final inputBorderColor = isDark ? const Color(0xFF283446) : const Color(0xFFE6EAEF);
-    final primaryColor = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488);
-    final titleColor = isDark ? const Color(0xFFEEF2F7) : const Color(0xFF131A24);
-    final subtitleColor = isDark ? const Color(0xFF98A4B4) : const Color(0xFF5C6675);
-    final shadowColor = isDark ? const Color(0x66000000) : const Color(0x1E19202D);
-    final focusHighlightColor = isDark ? const Color(0xFF2DD4BF).withOpacity(0.15) : const Color(0xFFD6F3EF);
+    final outerColor = AppColors.outerCard(isDark);
+    final borderColor = AppColors.cardBorder(isDark);
+    final inputBgColor = AppColors.inputBackground(isDark);
+    final inputBorderColor = AppColors.inputBorder(isDark);
+    final primaryColor = AppColors.accent(isDark);
+    final titleColor = AppColors.title(isDark);
+    final subtitleColor = AppColors.subtitle(isDark);
+    final shadowColor = AppColors.shadow(isDark);
+    final focusHighlightColor = AppColors.focusHighlight(isDark);
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0B0E14) : const Color(0xFFEBEDF1),
@@ -90,12 +91,7 @@ class _LoginFormState extends State<LoginForm> {
           if (state is Authenticated) {
             context.go(AppRouter.dashboardPath);
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackbar.showError(context, state.message);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -240,12 +236,9 @@ class _LoginFormState extends State<LoginForm> {
                                         alignment: Alignment.centerRight,
                                         child: TextButton(
                                           onPressed: () {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  'Demo mode: Contact system administrator to reset password',
-                                                ),
-                                              ),
+                                            AppSnackbar.showSuccess(
+                                              context,
+                                              'Demo mode: Contact system administrator to reset password',
                                             );
                                           },
                                           style: TextButton.styleFrom(

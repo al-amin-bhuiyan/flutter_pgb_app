@@ -7,6 +7,7 @@ import '../../../../core/theme/dimensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/presentation/widgets/app_icon_button.dart';
+import '../../../../core/presentation/utils/app_snackbar.dart';
 import '../../domain/entities/geofence_location.dart';
 import '../bloc/locations_bloc.dart';
 import '../bloc/locations_event.dart';
@@ -56,20 +57,10 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
       body: BlocListener<LocationsBloc, LocationsState>(
         listener: (context, state) {
           if (state is LocationsActionSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.primary,
-              ),
-            );
+            AppSnackbar.showSuccess(context, state.message);
             context.read<LocationsBloc>().add(LoadLocationsEvent());
           } else if (state is LocationsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackbar.showError(context, state.message);
           }
         },
         child: BlocBuilder<LocationsBloc, LocationsState>(

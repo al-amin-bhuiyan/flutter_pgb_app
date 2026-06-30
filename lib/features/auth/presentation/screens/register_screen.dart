@@ -6,6 +6,7 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/presentation/widgets/app_text_field.dart';
 import '../../../../core/presentation/widgets/app_button.dart';
 import '../../../../core/theme/dimensions.dart';
+import '../../../../core/presentation/utils/app_snackbar.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -56,12 +57,7 @@ class _RegisterFormState extends State<RegisterForm> {
           if (state is Authenticated) {
             context.go(AppRouter.dashboardPath);
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.redAccent,
-              ),
-            );
+            AppSnackbar.showError(context, state.message);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(

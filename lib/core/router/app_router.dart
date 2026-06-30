@@ -4,6 +4,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/todos/presentation/screens/todos_screen.dart';
+import '../../features/todos/presentation/screens/add_todo_screen.dart';
 import '../../features/locations/domain/entities/geofence_location.dart';
 import '../../features/locations/presentation/screens/location_list_screen.dart';
 import '../../features/locations/presentation/screens/add_location_screen.dart';
@@ -15,6 +16,7 @@ abstract class AppRouter {
   static const String registerPath = '/register';
   static const String dashboardPath = '/dashboard';
   static const String todosPath = '/todos';
+  static const String addTodoPath = '/todos/add';
   static const String locationsPath = '/locations';
   static const String addLocationPath = '/locations/add';
   static const String editLocationPath = '/locations/edit';
@@ -41,6 +43,10 @@ abstract class AppRouter {
       GoRoute(
         path: todosPath,
         builder: (context, state) => const TodosScreen(),
+      ),
+      GoRoute(
+        path: addTodoPath,
+        builder: (context, state) => const AddTodoScreen(),
       ),
       GoRoute(
         path: locationsPath,

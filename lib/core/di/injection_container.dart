@@ -36,6 +36,7 @@ import '../../features/todos/data/repositories/todos_repository_impl.dart';
 import '../../features/todos/domain/repositories/todos_repository.dart';
 import '../../features/todos/domain/usecases/get_todos_usecase.dart';
 import '../../features/todos/domain/usecases/save_todo_usecase.dart';
+import '../../features/todos/presentation/bloc/todos_bloc.dart';
 import '../../features/sync/domain/usecases/sync_todos_usecase.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../network/network_info.dart';
@@ -193,6 +194,17 @@ Future<void> initDI() async {
       getLocationsUseCase: sl<GetLocationsUseCase>(),
       saveLocationUseCase: sl<SaveLocationUseCase>(),
       deleteLocationUseCase: sl<DeleteLocationUseCase>(),
+    ),
+  );
+
+  // Blocs - Todos
+  sl.registerFactory(
+    () => TodosBloc(
+      getTodosUseCase: sl<GetTodosUseCase>(),
+      saveTodoUseCase: sl<SaveTodoUseCase>(),
+      todosRepository: sl<TodosRepository>(),
+      networkInfo: sl<NetworkInfo>(),
+      syncManager: sl<SyncManager>(),
     ),
   );
 }

@@ -25,6 +25,7 @@ import '../../features/locations/domain/repositories/locations_repository.dart';
 import '../../features/locations/domain/usecases/get_locations_usecase.dart';
 import '../../features/locations/domain/usecases/save_location_usecase.dart';
 import '../../features/locations/domain/usecases/delete_location_usecase.dart';
+import '../../features/locations/presentation/bloc/locations_bloc.dart';
 
 import '../../features/todos/data/datasources/todos_local_data_source.dart';
 import '../../features/todos/data/datasources/todos_local_data_source_impl.dart';
@@ -172,6 +173,15 @@ Future<void> initDI() async {
       localDataSource: sl<LocationsLocalDataSource>(),
       proximityCalculator: sl<ProximityCalculator>(),
       notificationHelper: sl<NotificationHelper>(),
+    ),
+  );
+
+  // Blocs - Locations
+  sl.registerFactory(
+    () => LocationsBloc(
+      getLocationsUseCase: sl<GetLocationsUseCase>(),
+      saveLocationUseCase: sl<SaveLocationUseCase>(),
+      deleteLocationUseCase: sl<DeleteLocationUseCase>(),
     ),
   );
 }

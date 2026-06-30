@@ -6,4 +6,6 @@ abstract class TodosRepository {
   Future<void> saveTodo(Todo todo);
 
   Future<void> syncTodos(List<Todo> todos);
+
+  Future<int> getPendingSyncCount();
 }

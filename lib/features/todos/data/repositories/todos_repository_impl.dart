@@ -57,4 +57,10 @@ class TodosRepositoryImpl implements TodosRepository {
       await _localDataSource.cacheTodo(model);
     }
   }
+
+  @override
+  Future<int> getPendingSyncCount() async {
+    final queue = await _localDataSource.getSyncQueue();
+    return queue.length;
+  }
 }

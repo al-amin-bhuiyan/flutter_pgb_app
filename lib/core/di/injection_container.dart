@@ -15,6 +15,7 @@ import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/domain/usecases/verify_session_usecase.dart';
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 import '../../features/locations/data/datasources/locations_local_data_source.dart';
 import '../../features/locations/data/datasources/locations_local_data_source_impl.dart';
@@ -108,6 +109,16 @@ Future<void> initDI() async {
   sl.registerLazySingleton(() => LoginUseCase(repository: sl<AuthRepository>()));
   sl.registerLazySingleton(() => RegisterUseCase(repository: sl<AuthRepository>()));
   sl.registerLazySingleton(() => VerifySessionUseCase(repository: sl<AuthRepository>()));
+
+  // Blocs - Authentication
+  sl.registerFactory(
+    () => AuthBloc(
+      loginUseCase: sl<LoginUseCase>(),
+      registerUseCase: sl<RegisterUseCase>(),
+      verifySessionUseCase: sl<VerifySessionUseCase>(),
+      authRepository: sl<AuthRepository>(),
+    ),
+  );
 
   // Data Sources - Locations
   sl.registerLazySingleton<LocationsRemoteDataSource>(

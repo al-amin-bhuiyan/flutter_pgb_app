@@ -191,4 +191,47 @@ void main() {
       },
     );
   });
+
+  group('SyncTodosManuallyEvent', () {
+    blocTest<TodosBloc, TodosState>(
+      'should emit [TodosLoading, TodoActionSuccess, TodosLoaded] when manual sync is successful',
+      build: () {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+        when(() => mockSyncManager.processSyncQueue()).thenAnswer((_) async => {});
+        when(() => mockGetTodosUseCase()).thenAnswer((_) async => [tTodo]);
+        when(() => mockTodosRepository.getPendingSyncCount()).thenAnswer((_) async => 0);
+        return todosBloc;
+      },
+      act: (bloc) => bloc.add(SyncTodosManuallyEvent()),
+      expect: () => [
+        TodosLoading(),
+        const TodoActionSuccess(message: 'Manual sync completed successfully'),
+        TodosLoaded(todos: [tTodo], isOffline: false, pendingSyncCount: 0),
+      ],
+      verify: (_) {
+        verify(() => mockNetworkInfo.isConnected).called(1);
+        verify(() => mockSyncManager.processSyncQueue()).called(1);
+      },
+    );
+
+    blocTest<TodosBloc, TodosState>(
+      'should emit [TodosLoading, TodosError, TodosLoaded] when manual sync fails (e.g. no connection)',
+      build: () {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+        when(() => mockGetTodosUseCase()).thenAnswer((_) async => [tTodo]);
+        when(() => mockTodosRepository.getPendingSyncCount()).thenAnswer((_) async => 2);
+        return todosBloc;
+      },
+      act: (bloc) => bloc.add(SyncTodosManuallyEvent()),
+      expect: () => [
+        TodosLoading(),
+        const TodosError(message: 'SocketException: No internet connection available'),
+        TodosLoaded(todos: [tTodo], isOffline: true, pendingSyncCount: 2),
+      ],
+      verify: (_) {
+        verify(() => mockNetworkInfo.isConnected).called(2);
+        verifyNever(() => mockSyncManager.processSyncQueue());
+      },
+    );
+  });
 }

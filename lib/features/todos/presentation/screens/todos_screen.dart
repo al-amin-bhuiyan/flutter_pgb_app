@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -116,6 +117,32 @@ class _TodosScreenViewState extends State<TodosScreenView> {
                               ),
                             ),
                           ),
+                          if (!state.isOffline && state.pendingSyncCount > 0)
+                            TextButton.icon(
+                              onPressed: () {
+                                context.read<TodosBloc>().add(SyncTodosManuallyEvent());
+                              },
+                              icon: const Icon(
+                                Icons.refresh,
+                                size: 16,
+                                color: AppColors.primary,
+                              ),
+                              label: Text(
+                                'Sync Now',
+                                style: AppTextStyles.label.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppDimensions.paddingM,
+                                  vertical: AppDimensions.paddingS,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                            ),
                         ],
                       ),
                     ),

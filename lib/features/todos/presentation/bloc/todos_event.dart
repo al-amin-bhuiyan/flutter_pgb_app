@@ -42,3 +42,5 @@ class ConnectivityChangedEvent extends TodosEvent {
   @override
   List<Object?> get props => [isConnected];
 }
+
+class SyncTodosManuallyEvent extends TodosEvent {}

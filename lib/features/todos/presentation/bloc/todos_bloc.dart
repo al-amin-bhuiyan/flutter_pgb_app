@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../sync/data/services/sync_manager.dart';
@@ -33,6 +34,7 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
     on<AddTodoEvent>(_onAddTodo);
     on<ToggleTodoStatusEvent>(_onToggleTodoStatus);
     on<ConnectivityChangedEvent>(_onConnectivityChanged);
+    on<SyncTodosManuallyEvent>(_onSyncTodosManually);
 
     _connectivitySubscription = _networkInfo.onConnectivityChanged.listen((isConnected) {
       add(ConnectivityChangedEvent(isConnected: isConnected));
@@ -116,6 +118,44 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
       isOffline: isOffline,
       pendingSyncCount: pendingCount,
     ));
+  }
+
+  Future<void> _onSyncTodosManually(
+    SyncTodosManuallyEvent event,
+    Emitter<TodosState> emit,
+  ) async {
+    emit(TodosLoading());
+    try {
+      final isConnected = await _networkInfo.isConnected;
+      if (!isConnected) {
+        throw const SocketException('No internet connection available');
+      }
+      
+      await _syncManager.processSyncQueue();
+      
+      final todos = await _getTodosUseCase();
+      final pendingCount = await _todosRepository.getPendingSyncCount();
+      todos.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      
+      emit(const TodoActionSuccess(message: 'Manual sync completed successfully'));
+      emit(TodosLoaded(
+        todos: todos,
+        isOffline: false,
+        pendingSyncCount: pendingCount,
+      ));
+    } catch (e) {
+      final todos = await _getTodosUseCase();
+      final isOffline = !await _networkInfo.isConnected;
+      final pendingCount = await _todosRepository.getPendingSyncCount();
+      todos.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      
+      emit(TodosError(message: e.toString()));
+      emit(TodosLoaded(
+        todos: todos,
+        isOffline: isOffline,
+        pendingSyncCount: pendingCount,
+      ));
+    }
   }
 
   @override

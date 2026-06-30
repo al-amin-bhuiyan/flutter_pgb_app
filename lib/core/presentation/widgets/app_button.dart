@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/dimensions.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -16,29 +17,29 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: AppDimensions.heightButton,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF0D9488),
           disabledBackgroundColor: const Color(0xFF0D9488).withValues(alpha: 0.6),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(13),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusL),
           ),
         ),
         child: isLoading
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
+            ? SizedBox(
+                width: AppDimensions.space3XL,
+                height: AppDimensions.space3XL,
+                child: const CircularProgressIndicator(
                   color: Colors.white,
                   strokeWidth: 2.5,
                 ),
               )
             : Text(
                 text,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: AppDimensions.fontXXL,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                   fontFamily: 'Inter',

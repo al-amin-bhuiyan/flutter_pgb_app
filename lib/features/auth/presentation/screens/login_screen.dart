@@ -6,6 +6,8 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/presentation/widgets/app_text_field.dart';
 import '../../../../core/presentation/widgets/app_button.dart';
 import '../../../../core/theme/dimensions.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -48,7 +50,7 @@ class _LoginFormState extends State<LoginForm> {
     final isTablet = screenWidth > AppDimensions.tabletBreakpoint;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEDF1),
+      backgroundColor: AppColors.background,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
@@ -57,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.redAccent,
+                backgroundColor: AppColors.error,
               ),
             );
           }
@@ -82,11 +84,11 @@ class _LoginFormState extends State<LoginForm> {
                       child: Container(
                         padding: EdgeInsets.all(AppDimensions.paddingXXL),
                         decoration: ShapeDecoration(
-                          color: const Color(0xFFF4F6F8),
+                          color: AppColors.cardBackground,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(AppDimensions.radiusContainer),
                             side: const BorderSide(
-                              color: Color(0xFFE6EAEF),
+                              color: AppColors.border,
                               width: 1,
                             ),
                           ),
@@ -111,14 +113,14 @@ class _LoginFormState extends State<LoginForm> {
                                     width: AppDimensions.sizeLogo,
                                     height: AppDimensions.sizeLogo,
                                     decoration: ShapeDecoration(
-                                      color: const Color(0xFF0D9488),
+                                      color: AppColors.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(AppDimensions.radiusLogo),
                                       ),
                                     ),
                                     child: Icon(
                                       Icons.radar,
-                                      color: Colors.white,
+                                      color: AppColors.white,
                                       size: AppDimensions.space3XL + 6,
                                     ),
                                   ),
@@ -128,22 +130,12 @@ class _LoginFormState extends State<LoginForm> {
                                       children: [
                                         TextSpan(
                                           text: 'Field',
-                                          style: TextStyle(
-                                            color: const Color(0xFF131A24),
-                                            fontSize: AppDimensions.fontTitleL,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: -0.44,
-                                          ),
+                                          style: AppTextStyles.titleLarge,
                                         ),
                                         TextSpan(
                                           text: 'Track',
-                                          style: TextStyle(
-                                            color: const Color(0xFF0D9488),
-                                            fontSize: AppDimensions.fontTitleL,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: -0.44,
+                                          style: AppTextStyles.titleLarge.copyWith(
+                                            color: AppColors.primary,
                                           ),
                                         ),
                                       ],
@@ -156,25 +148,14 @@ class _LoginFormState extends State<LoginForm> {
                             Center(
                               child: Text(
                                 'Welcome back',
-                                style: TextStyle(
-                                  color: const Color(0xFF131A24),
-                                  fontSize: AppDimensions.fontDisplayS,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: -0.48,
-                                ),
+                                style: AppTextStyles.display,
                               ),
                             ),
                             SizedBox(height: AppDimensions.spaceS),
                             Center(
                               child: Text(
                                 'Sign in to start your shift',
-                                style: TextStyle(
-                                  color: const Color(0xFF5C6675),
-                                  fontSize: AppDimensions.fontL,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: AppTextStyles.bodySmall,
                               ),
                             ),
                             SizedBox(height: AppDimensions.space3XL),
@@ -209,7 +190,7 @@ class _LoginFormState extends State<LoginForm> {
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                  color: const Color(0xFF5C6675),
+                                  color: AppColors.textSecondary,
                                   size: AppDimensions.iconM,
                                 ),
                                 onPressed: () {
@@ -245,21 +226,17 @@ class _LoginFormState extends State<LoginForm> {
                                 children: [
                                   Text(
                                     "Don't have an account? ",
-                                    style: TextStyle(
-                                      color: const Color(0xFF6B7480),
-                                      fontSize: AppDimensions.fontL,
-                                      fontFamily: 'Inter',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.textLight,
                                     ),
                                   ),
                                   GestureDetector(
                                     onTap: () => context.go(AppRouter.registerPath),
                                     child: Text(
                                       'Register',
-                                      style: TextStyle(
-                                        color: const Color(0xFF0D9488),
-                                        fontSize: AppDimensions.fontL,
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: AppColors.primary,
                                         fontWeight: FontWeight.w700,
-                                        fontFamily: 'Inter',
                                       ),
                                     ),
                                   ),

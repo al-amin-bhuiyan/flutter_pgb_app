@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/dimensions.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_text_styles.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -21,8 +23,8 @@ class AppButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0D9488),
-          disabledBackgroundColor: const Color(0xFF0D9488).withValues(alpha: 0.6),
+          backgroundColor: AppColors.primary,
+          disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.6),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimensions.radiusL),
           ),
@@ -32,18 +34,13 @@ class AppButton extends StatelessWidget {
                 width: AppDimensions.space3XL,
                 height: AppDimensions.space3XL,
                 child: const CircularProgressIndicator(
-                  color: Colors.white,
+                  color: AppColors.white,
                   strokeWidth: 2.5,
                 ),
               )
             : Text(
                 text,
-                style: TextStyle(
-                  fontSize: AppDimensions.fontXXL,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  fontFamily: 'Inter',
-                ),
+                style: AppTextStyles.bodyLarge.copyWith(color: AppColors.white),
               ),
       ),
     );

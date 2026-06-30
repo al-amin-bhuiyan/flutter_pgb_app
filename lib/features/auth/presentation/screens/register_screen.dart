@@ -6,6 +6,8 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/presentation/widgets/app_text_field.dart';
 import '../../../../core/presentation/widgets/app_button.dart';
 import '../../../../core/theme/dimensions.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -50,7 +52,7 @@ class _RegisterFormState extends State<RegisterForm> {
     final isTablet = screenWidth > AppDimensions.tabletBreakpoint;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEDF1),
+      backgroundColor: AppColors.background,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
@@ -59,7 +61,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.redAccent,
+                backgroundColor: AppColors.error,
               ),
             );
           }
@@ -84,11 +86,11 @@ class _RegisterFormState extends State<RegisterForm> {
                       child: Container(
                         padding: EdgeInsets.all(AppDimensions.paddingXXL),
                         decoration: ShapeDecoration(
-                          color: const Color(0xFFF4F6F8),
+                          color: AppColors.cardBackground,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(AppDimensions.radiusContainer),
                             side: const BorderSide(
-                              color: Color(0xFFE6EAEF),
+                              color: AppColors.border,
                               width: 1,
                             ),
                           ),
@@ -113,14 +115,14 @@ class _RegisterFormState extends State<RegisterForm> {
                                     width: AppDimensions.sizeLogo,
                                     height: AppDimensions.sizeLogo,
                                     decoration: ShapeDecoration(
-                                      color: const Color(0xFF0D9488),
+                                      color: AppColors.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(AppDimensions.radiusLogo),
                                       ),
                                     ),
                                     child: Icon(
                                       Icons.radar,
-                                      color: Colors.white,
+                                      color: AppColors.white,
                                       size: AppDimensions.space3XL + 6,
                                     ),
                                   ),
@@ -130,22 +132,12 @@ class _RegisterFormState extends State<RegisterForm> {
                                       children: [
                                         TextSpan(
                                           text: 'Field',
-                                          style: TextStyle(
-                                            color: const Color(0xFF131A24),
-                                            fontSize: AppDimensions.fontTitleL,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: -0.44,
-                                          ),
+                                          style: AppTextStyles.titleLarge,
                                         ),
                                         TextSpan(
                                           text: 'Track',
-                                          style: TextStyle(
-                                            color: const Color(0xFF0D9488),
-                                            fontSize: AppDimensions.fontTitleL,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: -0.44,
+                                          style: AppTextStyles.titleLarge.copyWith(
+                                            color: AppColors.primary,
                                           ),
                                         ),
                                       ],
@@ -158,25 +150,14 @@ class _RegisterFormState extends State<RegisterForm> {
                             Center(
                               child: Text(
                                 'Create Account',
-                                style: TextStyle(
-                                  color: const Color(0xFF131A24),
-                                  fontSize: AppDimensions.fontDisplayS,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: -0.48,
-                                ),
+                                style: AppTextStyles.display,
                               ),
                             ),
                             SizedBox(height: AppDimensions.spaceS),
                             Center(
                               child: Text(
                                 'Sign up to track coordinates and check lists',
-                                style: TextStyle(
-                                  color: const Color(0xFF5C6675),
-                                  fontSize: AppDimensions.fontM + 0.5,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: AppTextStyles.bodySmall,
                               ),
                             ),
                             SizedBox(height: AppDimensions.space3XL),
@@ -227,7 +208,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                  color: const Color(0xFF5C6675),
+                                  color: AppColors.textSecondary,
                                   size: AppDimensions.iconM,
                                 ),
                                 onPressed: () {
@@ -263,21 +244,17 @@ class _RegisterFormState extends State<RegisterForm> {
                                 children: [
                                   Text(
                                     "Already have an account? ",
-                                    style: TextStyle(
-                                      color: const Color(0xFF6B7480),
-                                      fontSize: AppDimensions.fontL,
-                                      fontFamily: 'Inter',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.textLight,
                                     ),
                                   ),
                                   GestureDetector(
                                     onTap: () => context.go(AppRouter.loginPath),
                                     child: Text(
                                       'Login',
-                                      style: TextStyle(
-                                        color: const Color(0xFF0D9488),
-                                        fontSize: AppDimensions.fontL,
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: AppColors.primary,
                                         fontWeight: FontWeight.w700,
-                                        fontFamily: 'Inter',
                                       ),
                                     ),
                                   ),

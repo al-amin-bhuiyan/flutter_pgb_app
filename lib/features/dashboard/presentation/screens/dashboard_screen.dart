@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/dimensions.dart';
 import '../../../../features/auth/domain/repositories/auth_repository.dart';
 import '../../../../features/geofence/data/services/geofence_manager.dart';
 import '../../../../features/geofence/data/services/permission_manager.dart';
@@ -35,6 +36,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > AppDimensions.tabletBreakpoint;
+
     return Scaffold(
       backgroundColor: const Color(0xFFEBEDF1),
       appBar: AppBar(
@@ -43,23 +47,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Row(
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: AppDimensions.space7XL,
+              height: AppDimensions.space7XL,
               decoration: BoxDecoration(
                 color: const Color(0xFF0D9488),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusM),
               ),
-              child: const Icon(Icons.radar, color: Colors.white, size: 18),
+              child: Icon(Icons.radar, color: Colors.white, size: AppDimensions.fontTitleS),
             ),
-            const SizedBox(width: 10),
-            const Text.rich(
+            SizedBox(width: AppDimensions.spaceM + 2),
+            Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
                     text: 'Field',
                     style: TextStyle(
-                      color: Color(0xFF131A24),
-                      fontSize: 18,
+                      color: const Color(0xFF131A24),
+                      fontSize: AppDimensions.fontTitleS,
                       fontWeight: FontWeight.w800,
                       fontFamily: 'Inter',
                     ),
@@ -67,8 +71,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   TextSpan(
                     text: 'Track',
                     style: TextStyle(
-                      color: Color(0xFF0D9488),
-                      fontSize: 18,
+                      color: const Color(0xFF0D9488),
+                      fontSize: AppDimensions.fontTitleS,
                       fontWeight: FontWeight.w800,
                       fontFamily: 'Inter',
                     ),
@@ -80,7 +84,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout, color: Color(0xFF5C6675)),
+            icon: Icon(Icons.logout, color: const Color(0xFF5C6675), size: AppDimensions.iconL),
             onPressed: () async {
               await sl<AuthRepository>().logout();
               sl<GeofenceManager>().stopMonitoring();
@@ -93,50 +97,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(AppDimensions.paddingXL),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
-              const Text(
+              SizedBox(height: AppDimensions.spaceL),
+              Text(
                 'Welcome Back!',
                 style: TextStyle(
-                  color: Color(0xFF131A24),
-                  fontSize: 24,
+                  color: const Color(0xFF131A24),
+                  fontSize: AppDimensions.fontDisplayS,
                   fontWeight: FontWeight.w800,
                   fontFamily: 'Inter',
                 ),
               ),
-              const SizedBox(height: 6),
-              const Text(
+              SizedBox(height: AppDimensions.spaceS),
+              Text(
                 'Track geofences and update checklists on the field.',
                 style: TextStyle(
-                  color: Color(0xFF5C6675),
-                  fontSize: 14,
+                  color: const Color(0xFF5C6675),
+                  fontSize: AppDimensions.fontL,
                   fontFamily: 'Inter',
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: AppDimensions.space6XL),
               
-              // Locations Management Card
-              _buildMenuCard(
-                context: context,
-                title: 'Manage Locations',
-                subtitle: 'Configure boundaries & geofence notifications',
-                icon: Icons.my_location,
-                color: const Color(0xFF0D9488),
-                onTap: () => context.push(AppRouter.locationsPath),
-              ),
-              const SizedBox(height: 18),
-
-              // Todos checklist Card
-              _buildMenuCard(
-                context: context,
-                title: 'Tasks Checklist',
-                subtitle: 'View, complete & auto-sync pending checklist items',
-                icon: Icons.checklist_rounded,
-                color: const Color(0xFF1E2530),
-                onTap: () => context.push(AppRouter.todosPath),
+              Expanded(
+                child: isTablet
+                    ? GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: AppDimensions.paddingL,
+                        mainAxisSpacing: AppDimensions.paddingL,
+                        childAspectRatio: 2.2,
+                        children: [
+                          _buildMenuCard(
+                            context: context,
+                            title: 'Manage Locations',
+                            subtitle: 'Configure boundaries & geofence notifications',
+                            icon: Icons.my_location,
+                            color: const Color(0xFF0D9488),
+                            onTap: () => context.push(AppRouter.locationsPath),
+                          ),
+                          _buildMenuCard(
+                            context: context,
+                            title: 'Tasks Checklist',
+                            subtitle: 'View, complete & auto-sync pending checklist items',
+                            icon: Icons.checklist_rounded,
+                            color: const Color(0xFF1E2530),
+                            onTap: () => context.push(AppRouter.todosPath),
+                          ),
+                        ],
+                      )
+                    : ListView(
+                        children: [
+                          _buildMenuCard(
+                            context: context,
+                            title: 'Manage Locations',
+                            subtitle: 'Configure boundaries & geofence notifications',
+                            icon: Icons.my_location,
+                            color: const Color(0xFF0D9488),
+                            onTap: () => context.push(AppRouter.locationsPath),
+                          ),
+                          SizedBox(height: AppDimensions.spaceXXL),
+                          _buildMenuCard(
+                            context: context,
+                            title: 'Tasks Checklist',
+                            subtitle: 'View, complete & auto-sync pending checklist items',
+                            icon: Icons.checklist_rounded,
+                            color: const Color(0xFF1E2530),
+                            onTap: () => context.push(AppRouter.todosPath),
+                          ),
+                        ],
+                      ),
               ),
             ],
           ),
@@ -155,13 +187,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(AppDimensions.radiusCard),
       child: Container(
-        padding: const EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(AppDimensions.paddingXXL),
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusCard),
             side: const BorderSide(
               color: Color(0xFFE6EAEF),
               width: 1,
@@ -179,40 +211,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Row(
           children: [
             Container(
-              width: 56,
-              height: 56,
+              width: AppDimensions.sizeAvatar,
+              height: AppDimensions.sizeAvatar,
               decoration: ShapeDecoration(
                 color: color.withValues(alpha: 0.1),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
               ),
               child: Icon(
                 icon,
                 color: color,
-                size: 28,
+                size: AppDimensions.iconXL,
               ),
             ),
-            const SizedBox(width: 18),
+            SizedBox(width: AppDimensions.spaceXXL),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: AppDimensions.fontTitleS,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF131A24),
+                      color: const Color(0xFF131A24),
                       fontFamily: 'Inter',
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: AppDimensions.spaceS),
                   Text(
                     subtitle,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF6B7480),
+                    style: TextStyle(
+                      fontSize: AppDimensions.fontM,
+                      color: const Color(0xFF6B7480),
                       fontFamily: 'Inter',
                       height: 1.4,
                     ),
@@ -220,10 +253,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios_rounded,
-              color: Color(0xFF6B7480),
-              size: 16,
+              color: const Color(0xFF6B7480),
+              size: AppDimensions.iconXS,
             ),
           ],
         ),

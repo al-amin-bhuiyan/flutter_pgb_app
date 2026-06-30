@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/dimensions.dart';
 import '../../domain/entities/geofence_location.dart';
 import '../bloc/locations_bloc.dart';
 import '../bloc/locations_event.dart';
@@ -30,22 +31,25 @@ class LocationListScreenView extends StatefulWidget {
 class _LocationListScreenViewState extends State<LocationListScreenView> {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > AppDimensions.tabletBreakpoint;
+
     return Scaffold(
       backgroundColor: const Color(0xFFEBEDF1),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        title: const Text(
+        title: Text(
           'Locations',
           style: TextStyle(
-            color: Color(0xFF1E2530),
+            color: const Color(0xFF1E2530),
             fontWeight: FontWeight.w700,
-            fontSize: 20,
+            fontSize: AppDimensions.fontTitleM,
             fontFamily: 'Inter',
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1E2530), size: 20),
+          icon: Icon(Icons.arrow_back_ios_new, color: const Color(0xFF1E2530), size: AppDimensions.fontTitleM),
           onPressed: () => context.go(AppRouter.dashboardPath),
         ),
       ),
@@ -84,45 +88,45 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
               if (locations.isEmpty) {
                 return Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    padding: EdgeInsets.symmetric(horizontal: AppDimensions.padding3XL + 8),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 80,
-                          height: 80,
+                          width: AppDimensions.sizeLogo + 20,
+                          height: AppDimensions.sizeLogo + 20,
                           decoration: const BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.location_off_outlined,
-                            size: 40,
-                            color: Color(0xFF0D9488),
+                            size: AppDimensions.iconXXL,
+                            color: const Color(0xFF0D9488),
                           ),
                         ),
-                        const SizedBox(height: 24),
-                        const Text(
+                        SizedBox(height: AppDimensions.space3XL),
+                        Text(
                           'No locations monitored yet',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: AppDimensions.fontTitleS,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1E2530),
+                            color: const Color(0xFF1E2530),
                             fontFamily: 'Inter',
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Text(
+                        SizedBox(height: AppDimensions.spaceM),
+                        Text(
                           'Add coordinates and radius to set up geofencing boundaries and alerts.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF6B7480),
+                            fontSize: AppDimensions.fontL,
+                            color: const Color(0xFF6B7480),
                             fontFamily: 'Inter',
                             height: 1.5,
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        SizedBox(height: AppDimensions.space7XL),
                         ElevatedButton.icon(
                           onPressed: () => context.push(AppRouter.addLocationPath).then((_) {
                             if (context.mounted) {
@@ -136,9 +140,12 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF0D9488),
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppDimensions.paddingXXL,
+                              vertical: AppDimensions.paddingL - 2,
+                            ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(13),
+                              borderRadius: BorderRadius.circular(AppDimensions.radiusL),
                             ),
                           ),
                         ),
@@ -148,119 +155,27 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                 );
               }
 
+              if (isTablet) {
+                return GridView.builder(
+                  padding: EdgeInsets.all(AppDimensions.paddingL),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: AppDimensions.paddingL,
+                    mainAxisSpacing: AppDimensions.paddingL,
+                    childAspectRatio: 2.2,
+                  ),
+                  itemCount: locations.length,
+                  itemBuilder: (context, index) {
+                    return _buildLocationCard(context, locations[index]);
+                  },
+                );
+              }
+
               return ListView.builder(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(AppDimensions.paddingL),
                 itemCount: locations.length,
                 itemBuilder: (context, index) {
-                  final location = locations[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 14.0),
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: const BorderSide(
-                          color: Color(0xFFE6EAEF),
-                          width: 1,
-                        ),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x0A19202D),
-                          blurRadius: 20,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      key: ValueKey(location.id),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFF4F6F8),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.location_on,
-                              color: Color(0xFF0D9488),
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  location.name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xFF131A24),
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  'Coordinates: ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}',
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Color(0xFF6B7480),
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: ShapeDecoration(
-                                    color: const Color(0xFFD6F3EF),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Radius: ${location.radius.toInt()}m',
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF0D9488),
-                                      fontFamily: 'Inter',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit_outlined, color: Color(0xFF5C6675)),
-                                onPressed: () {
-                                  context.push(AppRouter.editLocationPath, extra: location).then((_) {
-                                    if (context.mounted) {
-                                      context.read<LocationsBloc>().add(LoadLocationsEvent());
-                                    }
-                                  });
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                                onPressed: () => _showDeleteConfirmation(context, location),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                  return _buildLocationCard(context, locations[index]);
                 },
               );
             }
@@ -279,7 +194,9 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
                 }
               }),
               backgroundColor: const Color(0xFF0D9488),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+              ),
               child: const Icon(Icons.add, color: Colors.white),
             );
           }
@@ -289,16 +206,131 @@ class _LocationListScreenViewState extends State<LocationListScreenView> {
     );
   }
 
+  Widget _buildLocationCard(BuildContext context, GeofenceLocation location) {
+    return Container(
+      margin: EdgeInsets.only(bottom: AppDimensions.paddingM + 2),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusCard),
+          side: const BorderSide(
+            color: Color(0xFFE6EAEF),
+            width: 1,
+          ),
+        ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x0A19202D),
+            blurRadius: 20,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(AppDimensions.paddingL),
+        key: ValueKey(location.id),
+        child: Row(
+          children: [
+            Container(
+              width: AppDimensions.widthIconBg,
+              height: AppDimensions.heightIconBg,
+              decoration: ShapeDecoration(
+                color: const Color(0xFFF4F6F8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                ),
+              ),
+              child: Icon(
+                Icons.location_on,
+                color: const Color(0xFF0D9488),
+                size: AppDimensions.iconL,
+              ),
+            ),
+            SizedBox(width: AppDimensions.spaceXXL),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    location.name,
+                    style: TextStyle(
+                      fontSize: AppDimensions.fontXXL,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF131A24),
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  SizedBox(height: AppDimensions.spaceS),
+                  Text(
+                    'Coordinates: ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}',
+                    style: TextStyle(
+                      fontSize: AppDimensions.fontM,
+                      color: const Color(0xFF6B7480),
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  SizedBox(height: AppDimensions.spaceS),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingS,
+                      vertical: AppDimensions.paddingXS,
+                    ),
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFFD6F3EF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+                      ),
+                    ),
+                    child: Text(
+                      'Radius: ${location.radius.toInt()}m',
+                      style: TextStyle(
+                        fontSize: AppDimensions.fontXS,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF0D9488),
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit_outlined, color: const Color(0xFF5C6675), size: AppDimensions.iconL),
+                  onPressed: () {
+                    context.push(AppRouter.editLocationPath, extra: location).then((_) {
+                      if (context.mounted) {
+                        context.read<LocationsBloc>().add(LoadLocationsEvent());
+                      }
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete_outline, color: Colors.redAccent, size: AppDimensions.iconL),
+                  onPressed: () => _showDeleteConfirmation(context, location),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showDeleteConfirmation(BuildContext context, GeofenceLocation location) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text(
+        title: Text(
           'Delete Location?',
-          style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'Inter'),
+          style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'Inter', fontSize: AppDimensions.fontTitleS),
         ),
         content: Text('Are you sure you want to delete "${location.name}"? This will stop geofencing alerts for this area.'),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusCard)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),

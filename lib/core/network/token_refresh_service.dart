@@ -20,13 +20,13 @@ class TokenRefreshService {
     try {
       final response = await _dio.post(
         '/auth/refresh',
-        data: {'refreshToken': refreshToken},
+        data: {'refresh_token': refreshToken},
       );
 
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
-        final newAccessToken = data['accessToken'] as String;
-        final newRefreshToken = data['refreshToken'] as String;
+        final newAccessToken = data['access_token'] as String;
+        final newRefreshToken = data['refresh_token'] as String;
 
         await _storageHelper.writeAccessToken(newAccessToken);
         await _storageHelper.writeRefreshToken(newRefreshToken);

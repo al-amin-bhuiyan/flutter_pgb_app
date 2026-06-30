@@ -17,7 +17,8 @@ class LocationsRemoteDataSourceImpl implements LocationsRemoteDataSource {
       final response = await _client.dio.get('/locations');
 
       if (response.statusCode == 200) {
-        final list = response.data as List<dynamic>;
+        final dataMap = response.data as Map<String, dynamic>;
+        final list = dataMap['data'] as List<dynamic>;
         return list
             .map((item) => GeofenceLocationModel.fromJson(item as Map<String, dynamic>))
             .toList();

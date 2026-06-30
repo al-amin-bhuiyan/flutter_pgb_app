@@ -33,10 +33,12 @@ void main() {
       refreshToken: 'refresh',
     );
     final tResponseData = {
-      'id': '1',
-      'email': tEmail,
-      'token': 'token',
-      'refreshToken': 'refresh',
+      'user': {
+        'id': '1',
+        'email': tEmail,
+      },
+      'access_token': 'token',
+      'refresh_token': 'refresh',
     };
 
     test('should return UserModel when the response code is 200', () async {
@@ -81,10 +83,12 @@ void main() {
       refreshToken: 'refresh',
     );
     final tResponseData = {
-      'id': '1',
-      'email': tEmail,
-      'token': 'token',
-      'refreshToken': 'refresh',
+      'user': {
+        'id': '1',
+        'email': tEmail,
+      },
+      'access_token': 'token',
+      'refresh_token': 'refresh',
     };
 
     test('should return UserModel when the response code is 201', () async {
@@ -109,9 +113,11 @@ void main() {
 
   group('getUserProfile', () {
     final tProfileData = {
-      'id': '1',
-      'name': 'Test User',
-      'email': 'test@example.com',
+      'user': {
+        'id': '1',
+        'name': 'Test User',
+        'email': 'test@example.com',
+      }
     };
     final tUserProfileModel = UserProfileModel(
       id: '1',

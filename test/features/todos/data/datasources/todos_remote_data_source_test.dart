@@ -40,7 +40,7 @@ void main() {
     test('should return list of TodoModel when status code is 200', () async {
       when(() => mockDio.get(any())).thenAnswer((_) async => Response(
             requestOptions: RequestOptions(path: '/todos'),
-            data: [tTodoJson],
+            data: {'data': [tTodoJson]},
             statusCode: 200,
           ));
 

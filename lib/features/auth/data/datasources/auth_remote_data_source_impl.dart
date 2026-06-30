@@ -59,7 +59,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await _client.dio.post(
         '/auth/register',
         data: {
-          'name': name,
+          'full_name': name,
           'email': email,
           'password': password,
         },
@@ -86,14 +86,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserProfileModel> getUserProfile() async {
     try {
-      final response = await _client.dio.get('/auth/profile');
+      final response = await _client.dio.get('/me');
 
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
+        final userMap = data['user'] != null
+            ? data['user'] as Map<String, dynamic>
+            : data;
         return UserProfileModel(
-          id: data['id'] as String,
-          name: data['name'] as String,
-          email: data['email'] as String,
+          id: userMap['id'] as String,
+          name: userMap['name'] as String,
+          email: userMap['email'] as String,
         );
       } else {
         throw ServerException(

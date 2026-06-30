@@ -64,7 +64,7 @@ Future<void> initDI() async {
   const storage = FlutterSecureStorage();
   sl.registerLazySingleton<SecureStorageHelper>(() => SecureStorageHelper(storage: storage));
 
-  const baseUrl = 'https://todo.progressivebyte.com';
+  const baseUrl = 'https://todo.progressivebyte.com/api/v1';
 
   // Network & Dio Setup
   final refreshDio = Dio(BaseOptions(baseUrl: baseUrl));

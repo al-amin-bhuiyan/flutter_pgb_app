@@ -41,7 +41,7 @@ void main() {
     test('should return list of GeofenceLocationModel when response is 200', () async {
       when(() => mockDio.get(any())).thenAnswer((_) async => Response(
             requestOptions: RequestOptions(path: '/locations'),
-            data: [tLocationJson],
+            data: {'data': [tLocationJson]},
             statusCode: 200,
           ));
 

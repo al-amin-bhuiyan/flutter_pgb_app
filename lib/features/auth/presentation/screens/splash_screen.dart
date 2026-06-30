@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/dimensions.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -44,12 +45,12 @@ class _SplashScreenViewState extends State<SplashScreenView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 80,
-                height: 80,
+                width: AppDimensions.sizeLogo,
+                height: AppDimensions.sizeLogo,
                 decoration: ShapeDecoration(
                   color: const Color(0xFF0D9488),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusLogo),
                   ),
                   shadows: const [
                     BoxShadow(
@@ -59,21 +60,21 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                     )
                   ],
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.radar,
                   color: Colors.white,
-                  size: 40,
+                  size: AppDimensions.space3XL + 6,
                 ),
               ),
-              const SizedBox(height: 24),
-              const Text.rich(
+              SizedBox(height: AppDimensions.space3XL),
+              Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
                       text: 'Field',
                       style: TextStyle(
-                        color: Color(0xFF131A24),
-                        fontSize: 28,
+                        color: const Color(0xFF131A24),
+                        fontSize: AppDimensions.fontDisplayM,
                         fontWeight: FontWeight.w800,
                         fontFamily: 'Inter',
                         letterSpacing: -0.56,
@@ -82,8 +83,8 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                     TextSpan(
                       text: 'Track',
                       style: TextStyle(
-                        color: Color(0xFF0D9488),
-                        fontSize: 28,
+                        color: const Color(0xFF0D9488),
+                        fontSize: AppDimensions.fontDisplayM,
                         fontWeight: FontWeight.w800,
                         fontFamily: 'Inter',
                         letterSpacing: -0.56,
@@ -92,12 +93,12 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                   ],
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: AppDimensions.spaceM),
+              Text(
                 'Geofence & Field checklist helper',
                 style: TextStyle(
-                  color: Color(0xFF6B7480),
-                  fontSize: 14,
+                  color: const Color(0xFF6B7480),
+                  fontSize: AppDimensions.fontL,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Inter',
                 ),

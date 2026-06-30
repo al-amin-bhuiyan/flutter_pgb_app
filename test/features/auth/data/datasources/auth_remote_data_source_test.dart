@@ -8,19 +8,17 @@ import 'package:flutter_pgb_app/features/auth/data/models/user_model.dart';
 import 'package:flutter_pgb_app/features/auth/data/models/user_profile_model.dart';
 import 'package:flutter_pgb_app/core/error/exceptions.dart';
 
-class MockDioClient extends Mock implements DioClient {}
 class MockDio extends Mock implements Dio {}
 
 void main() {
-  late MockDioClient mockDioClient;
+  late DioClient dioClient;
   late MockDio mockDio;
   late AuthRemoteDataSource dataSource;
 
   setUp(() {
-    mockDioClient = MockDioClient();
     mockDio = MockDio();
-    when(() => mockDioClient.dio).thenReturn(mockDio);
-    dataSource = AuthRemoteDataSourceImpl(client: mockDioClient);
+    dioClient = DioClient(dio: mockDio);
+    dataSource = AuthRemoteDataSourceImpl(client: dioClient);
   });
 
   group('login', () {

@@ -7,19 +7,17 @@ import 'package:flutter_pgb_app/features/todos/data/datasources/todos_remote_dat
 import 'package:flutter_pgb_app/features/todos/data/models/todo_model.dart';
 import 'package:flutter_pgb_app/core/error/exceptions.dart';
 
-class MockDioClient extends Mock implements DioClient {}
 class MockDio extends Mock implements Dio {}
 
 void main() {
-  late MockDioClient mockDioClient;
+  late DioClient dioClient;
   late MockDio mockDio;
   late TodosRemoteDataSource dataSource;
 
   setUp(() {
-    mockDioClient = MockDioClient();
     mockDio = MockDio();
-    when(() => mockDioClient.dio).thenReturn(mockDio);
-    dataSource = TodosRemoteDataSourceImpl(client: mockDioClient);
+    dioClient = DioClient(dio: mockDio);
+    dataSource = TodosRemoteDataSourceImpl(client: dioClient);
   });
 
   final tTodoModel = TodoModel(

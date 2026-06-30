@@ -7,19 +7,17 @@ import 'package:flutter_pgb_app/features/locations/data/datasources/locations_re
 import 'package:flutter_pgb_app/features/locations/data/models/geofence_location_model.dart';
 import 'package:flutter_pgb_app/core/error/exceptions.dart';
 
-class MockDioClient extends Mock implements DioClient {}
 class MockDio extends Mock implements Dio {}
 
 void main() {
-  late MockDioClient mockDioClient;
+  late DioClient dioClient;
   late MockDio mockDio;
   late LocationsRemoteDataSource dataSource;
 
   setUp(() {
-    mockDioClient = MockDioClient();
     mockDio = MockDio();
-    when(() => mockDioClient.dio).thenReturn(mockDio);
-    dataSource = LocationsRemoteDataSourceImpl(client: mockDioClient);
+    dioClient = DioClient(dio: mockDio);
+    dataSource = LocationsRemoteDataSourceImpl(client: dioClient);
   });
 
   const tLocationModel = GeofenceLocationModel(

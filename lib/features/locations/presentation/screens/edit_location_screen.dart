@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/presentation/widgets/app_text_field.dart';
+import '../../../../core/presentation/widgets/app_button.dart';
 import '../../domain/entities/geofence_location.dart';
 import '../bloc/locations_bloc.dart';
 import '../bloc/locations_event.dart';
@@ -137,11 +139,11 @@ class _EditLocationFormState extends State<EditLocationForm> {
                       const SizedBox(height: 24),
                       
                       // Name input
-                      _buildLabel('Location Name'),
-                      _buildTextField(
+                      AppTextField(
                         controller: _nameController,
+                        labelText: 'Location Name',
                         hintText: 'e.g. Downtown Office',
-                        icon: Icons.title,
+                        prefixIcon: Icons.title,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter location name';
@@ -152,11 +154,11 @@ class _EditLocationFormState extends State<EditLocationForm> {
                       const SizedBox(height: 18),
 
                       // Latitude input
-                      _buildLabel('Latitude'),
-                      _buildTextField(
+                      AppTextField(
                         controller: _latController,
+                        labelText: 'Latitude',
                         hintText: 'e.g. 23.8103',
-                        icon: Icons.explore_outlined,
+                        prefixIcon: Icons.explore_outlined,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -175,11 +177,11 @@ class _EditLocationFormState extends State<EditLocationForm> {
                       const SizedBox(height: 18),
 
                       // Longitude input
-                      _buildLabel('Longitude'),
-                      _buildTextField(
+                      AppTextField(
                         controller: _lngController,
+                        labelText: 'Longitude',
                         hintText: 'e.g. 90.4125',
-                        icon: Icons.explore_outlined,
+                        prefixIcon: Icons.explore_outlined,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -198,11 +200,11 @@ class _EditLocationFormState extends State<EditLocationForm> {
                       const SizedBox(height: 18),
 
                       // Radius input
-                      _buildLabel('Radius (meters)'),
-                      _buildTextField(
+                      AppTextField(
                         controller: _radiusController,
+                        labelText: 'Radius (meters)',
                         hintText: 'e.g. 150',
-                        icon: Icons.circle_outlined,
+                        prefixIcon: Icons.circle_outlined,
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -218,30 +220,10 @@ class _EditLocationFormState extends State<EditLocationForm> {
                       const SizedBox(height: 32),
 
                       // Submit Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: isLoading ? null : _submitForm,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0D9488),
-                            disabledBackgroundColor: const Color(0xFF0D9488).withValues(alpha: 0.6),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(13),
-                            ),
-                          ),
-                          child: isLoading
-                              ? const CircularProgressIndicator(color: Colors.white)
-                              : const Text(
-                                  'Update Location',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
-                        ),
+                      AppButton(
+                        text: 'Update Location',
+                        isLoading: isLoading,
+                        onPressed: _submitForm,
                       ),
                     ],
                   ),
@@ -249,64 +231,6 @@ class _EditLocationFormState extends State<EditLocationForm> {
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Color(0xFF5C6675),
-          fontSize: 13,
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    required IconData icon,
-    TextInputType? keyboardType,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      validator: validator,
-      style: const TextStyle(
-        color: Color(0xFF131A24),
-        fontSize: 15,
-        fontFamily: 'Inter',
-      ),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Color(0xFF6B7480)),
-        prefixIcon: Icon(icon, color: const Color(0xFF0D9488), size: 20),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(13),
-          borderSide: const BorderSide(color: Color(0xFFE6EAEF), width: 1),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(13),
-          borderSide: const BorderSide(color: Color(0xFFE6EAEF), width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(13),
-          borderSide: const BorderSide(color: Color(0xFF0D9488), width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(13),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1),
         ),
       ),
     );

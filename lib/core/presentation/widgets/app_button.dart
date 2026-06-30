@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../theme/dimensions.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
+import '../../theme/dimensions.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -17,30 +17,39 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = AppColors.accent(isDark);
+
     return SizedBox(
       width: double.infinity,
-      height: AppDimensions.heightButton,
+      height: 52.h,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.6),
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: primaryColor.withOpacity(0.6),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusL),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
           ),
+          elevation: 0,
         ),
         child: isLoading
-            ? SizedBox(
-                width: AppDimensions.space3XL,
-                height: AppDimensions.space3XL,
-                child: const CircularProgressIndicator(
-                  color: AppColors.white,
-                  strokeWidth: 2.5,
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
               )
             : Text(
                 text,
-                style: AppTextStyles.bodyLarge.copyWith(color: AppColors.white),
+                style: TextStyle(
+                  fontSize: AppDimensions.fontXL + 0.5,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
               ),
       ),
     );

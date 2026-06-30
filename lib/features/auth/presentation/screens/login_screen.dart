@@ -8,6 +8,8 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/dimensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/presentation/utils/app_snackbar.dart';
+import '../../../../core/presentation/widgets/app_text_field.dart';
+import '../../../../core/presentation/widgets/app_button.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -165,19 +167,13 @@ class _LoginFormState extends State<LoginForm> {
                                       SizedBox(height: AppDimensions.space4XL),
 
                                       // Email Text Field
-                                      LoginTextField(
+                                      AppTextField(
                                         controller: _emailController,
                                         focusNode: _emailFocus,
                                         labelText: 'Email',
                                         hintText: 'john.doe@example.com',
                                         prefixIcon: Icons.mail_outline,
                                         keyboardType: TextInputType.emailAddress,
-                                        titleColor: titleColor,
-                                        subtitleColor: subtitleColor,
-                                        inputBgColor: inputBgColor,
-                                        inputBorderColor: inputBorderColor,
-                                        primaryColor: primaryColor,
-                                        focusHighlightColor: focusHighlightColor,
                                         validator: (value) {
                                           if (value == null || value.trim().isEmpty) {
                                             return 'Please enter email address';
@@ -192,19 +188,13 @@ class _LoginFormState extends State<LoginForm> {
                                       SizedBox(height: AppDimensions.spaceXL),
 
                                       // Password Text Field
-                                      LoginTextField(
+                                      AppTextField(
                                         controller: _passwordController,
                                         focusNode: _passwordFocus,
                                         labelText: 'Password',
                                         hintText: '••••••••',
                                         prefixIcon: Icons.lock_outline,
                                         obscureText: _obscurePassword,
-                                        titleColor: titleColor,
-                                        subtitleColor: subtitleColor,
-                                        inputBgColor: inputBgColor,
-                                        inputBorderColor: inputBorderColor,
-                                        primaryColor: primaryColor,
-                                        focusHighlightColor: focusHighlightColor,
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                             _obscurePassword
@@ -260,10 +250,10 @@ class _LoginFormState extends State<LoginForm> {
                                       SizedBox(height: AppDimensions.spaceXXL),
 
                                       // Submit Button
-                                      LoginButton(
+                                      AppButton(
+                                        text: 'Sign in',
                                         isLoading: isLoading,
                                         onPressed: _submitForm,
-                                        primaryColor: primaryColor,
                                       ),
                                       SizedBox(height: AppDimensions.spaceXXL),
 
@@ -397,186 +387,6 @@ class WelcomeMessage extends StatelessWidget {
   }
 }
 
-class LoginTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final String labelText;
-  final String hintText;
-  final IconData prefixIcon;
-  final TextInputType keyboardType;
-  final bool obscureText;
-  final Widget? suffixIcon;
-  final String? Function(String?)? validator;
-  final Color titleColor;
-  final Color subtitleColor;
-  final Color inputBgColor;
-  final Color inputBorderColor;
-  final Color primaryColor;
-  final Color focusHighlightColor;
-
-  const LoginTextField({
-    super.key,
-    required this.controller,
-    required this.focusNode,
-    required this.labelText,
-    required this.hintText,
-    required this.prefixIcon,
-    this.keyboardType = TextInputType.text,
-    this.obscureText = false,
-    this.suffixIcon,
-    this.validator,
-    required this.titleColor,
-    required this.subtitleColor,
-    required this.inputBgColor,
-    required this.inputBorderColor,
-    required this.primaryColor,
-    required this.focusHighlightColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          labelText,
-          style: TextStyle(
-            color: subtitleColor,
-            fontSize: AppDimensions.fontS,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        SizedBox(height: AppDimensions.spaceM),
-        Container(
-          decoration: BoxDecoration(
-            boxShadow: focusNode.hasFocus
-                ? [
-                    BoxShadow(
-                      color: focusHighlightColor,
-                      blurRadius: 0,
-                      offset: const Offset(0, 0),
-                      spreadRadius: 3.r,
-                    )
-                  ]
-                : null,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-          ),
-          child: TextFormField(
-            controller: controller,
-            focusNode: focusNode,
-            obscureText: obscureText,
-            keyboardType: keyboardType,
-            style: TextStyle(
-              color: titleColor,
-              fontSize: AppDimensions.fontXL,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: inputBgColor,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppDimensions.radiusL,
-                vertical: AppDimensions.fontXL,
-              ),
-              prefixIcon: Icon(
-                prefixIcon,
-                color: subtitleColor,
-                size: AppDimensions.iconS + 1,
-              ),
-              suffixIcon: suffixIcon,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-                borderSide: BorderSide(
-                  width: 1,
-                  color: inputBorderColor,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-                borderSide: BorderSide(
-                  width: 1,
-                  color: primaryColor,
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-                borderSide: const BorderSide(
-                  width: 1,
-                  color: Colors.redAccent,
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-                borderSide: const BorderSide(
-                  width: 1,
-                  color: Colors.redAccent,
-                ),
-              ),
-              hintText: hintText,
-              hintStyle: TextStyle(
-                color: subtitleColor.withOpacity(0.6),
-                fontSize: AppDimensions.fontXL,
-              ),
-            ),
-            validator: validator,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class LoginButton extends StatelessWidget {
-  final bool isLoading;
-  final VoidCallback onPressed;
-  final Color primaryColor;
-
-  const LoginButton({
-    super.key,
-    required this.isLoading,
-    required this.onPressed,
-    required this.primaryColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52.h,
-      child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          foregroundColor: Colors.white,
-          disabledBackgroundColor: primaryColor.withOpacity(0.6),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-          ),
-          elevation: 0,
-        ),
-        child: isLoading
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : Text(
-                'Sign in',
-                style: TextStyle(
-                  fontSize: AppDimensions.fontXL + 0.5,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-      ),
-    );
-  }
-}
 
 class LoginFooterRedirect extends StatelessWidget {
   final VoidCallback onTap;
